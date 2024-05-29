@@ -23,7 +23,11 @@ namespace oktmo.Pages.Codes
         public OktmoEntry OktmoEntry { get; set; } = default!;
 
         public IList<OktmoEntry> OktmoEntryListPrev { get; set; } = default!;
+        public IList<OktmoEntry> OktmoEntryListPrevHidden { get; set; } = default;
+
         public IList<OktmoEntry> OktmoEntryListNext { get; set; } = default;
+        public IList<OktmoEntry> OktmoEntryListNextHidden { get; set; } = default;
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -50,14 +54,15 @@ namespace oktmo.Pages.Codes
 
         public async Task GetPrevOktmoEntries(OktmoEntry oktmoEntry)
         {
+            List<OktmoEntry> res = [];
             var oktmonum = oktmoEntry.Octmo;
             oktmonum = oktmonum.TrimEnd('0');
             if (oktmoEntry.Razdel == "2")
+            {
+                res.Add(oktmoEntry);
                 oktmonum = oktmonum[..^3];
-            else
-                oktmonum = oktmonum[..^1]; // fix later TODO
+            }
             OktmoEntryListPrev = await _context.OktmoEntry.ToListAsync();
-            List<OktmoEntry> res = [];
             while (!oktmonum.IsNullOrEmpty())
             {
                 oktmonum = oktmonum.TrimEnd('0');
@@ -66,7 +71,8 @@ namespace oktmo.Pages.Codes
                 res.InsertRange(0, items);
                 oktmonum = oktmonum[..^1];
             }
-            OktmoEntryListPrev = res;
+            OktmoEntryListPrev = res.Where(e=> e.IsActual).ToList();
+            OktmoEntryListPrevHidden = res.Where(e => e.IsActual == false).ToList();
         }
 
         public void GetNextOktmoEntries(OktmoEntry oktmoEntry)
@@ -115,8 +121,8 @@ namespace oktmo.Pages.Codes
                 {
                     res.AddRange(OktmoEntryListNext.Where(e => e.Octmo.StartsWith(oktmoEntry.Octmo[..8]) & e.Razdel == "2").ToList());
                 }
-                OktmoEntryListNext = res;
-
+                OktmoEntryListNext = res.Where(e => e.IsActual).ToList();
+                OktmoEntryListNextHidden = res.Where(e => e.IsActual == false).ToList();
             }
         }
     }

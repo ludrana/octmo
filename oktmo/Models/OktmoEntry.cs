@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace oktmo.Models
 {
@@ -10,7 +11,6 @@ namespace oktmo.Models
 
 		[NotMapped]
 		[StringLength(2)]
-		[RegularExpression(@"^\d{2}$", ErrorMessage = "Ter must contain exactly 2 numeric characters.")]
 		public string Ter => Octmo[..2];
 
         [NotMapped]
@@ -24,16 +24,20 @@ namespace oktmo.Models
 
 		[Required]
         [StringLength(11)]
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "octmo must contain exactly 11 numeric characters.")]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Код ОКТМО должен содержать 11 цифр.")]
+        [DisplayName("Код ОКТМО")]
         public string Octmo { get; set; }
 
 		[Required]
 		[StringLength(1)]
-		[RegularExpression(@"^\d{1}$", ErrorMessage = "Razdel must contain exactly 1 numeric character.")]
+        [DisplayName("Раздел")]
+        [RegularExpression(@"^\d{1}$", ErrorMessage = "Раздел должен содержать 1 цифру.")]
 		public string Razdel { get; set; }
 
 		[StringLength(500)]
-		public string Name { get; set; }
+        [DisplayName("Наименование населенного пункта")]
+
+        public string Name { get; set; }
 
 		[Required]
 		public bool IsActual { get; set; } = true;

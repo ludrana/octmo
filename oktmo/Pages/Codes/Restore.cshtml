@@ -1,13 +1,12 @@
 ﻿@page
-@model oktmo.Pages.Codes.DeleteModel
-
+@model oktmo.Pages.Codes.RestoreModel
 @{
-    ViewData["Title"] = "Удалить запись";
+    ViewData["Title"] = "Восстановление записи";
 }
 
-<h1>Delete</h1>
+<h1>Восстановление записи</h1>
 
-<h3>Вы уверены что хотите удалить запись?</h3>
+<h3>Вы уверены что хотите восстановить запись?</h3>
 <div>
     <hr />
     <dl class="row">
@@ -36,8 +35,8 @@
         <input type="hidden" asp-for="OktmoEntry.Name" />
         <input type="hidden" asp-for="OktmoEntry.Octmo" />
         <input type="hidden" asp-for="OktmoEntry.Razdel" />
-        <input type="hidden" asp-for="OktmoEntry.IsActual" value="false" />
-        <button type="submit" class="btn btn-danger">Удалить</button> |
+        <input type="hidden" asp-for="OktmoEntry.IsActual" value="true" />
+        <button type="submit" class="btn btn-danger">Восстановить</button> |
         <a asp-page="./Index">На главную</a>
     </form>
 </div>

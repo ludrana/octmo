@@ -2,67 +2,19 @@
 @model oktmo.Pages.Codes.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "ОкТМО";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>OktmoEntry</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Ter)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.Ter)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Kod1)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.Kod1)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Kod2)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.Kod2)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Kod3)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.Kod3)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Razdel)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.Razdel)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.Name)
-        </dt>
-        <dd class="col-sm-10">
+<table class="table">
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.OktmoEntry.Octmo)
+        </td>
+        <td>
             @Html.DisplayFor(model => model.OktmoEntry.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OktmoEntry.IsActual)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OktmoEntry.IsActual)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.OktmoEntry.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
-
-<p>
-    nav
-</p>
+        </td>
+    </tr>
+</table>
 
 <table class="table">
     <thead>
@@ -76,15 +28,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.OktmoEntryListPrev[0].Name)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OktmoEntryListPrev[0].IsActual)
-            </th>
-            <th></th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.OktmoEntryListPrev)
-        { // style='visibility:collapse'
+        { 
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Octmo)
@@ -93,21 +45,21 @@
                     @Html.DisplayFor(modelItem => item.Razdel)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsActual)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+                    </td>
+                }
+                
             </tr>
         }
         <tr></tr>
         @foreach (var item in Model.OktmoEntryListNext)
-        { // style='visibility:collapse'
+        { 
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Octmo)
@@ -116,18 +68,78 @@
                     @Html.DisplayFor(modelItem => item.Razdel)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsActual)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
 </table>
 
+@if (User.Identity.IsAuthenticated)
+{
+<div visible="false" id="h" class="w-100">
+	<p>Скрытые записи</p>
+	<table class="table">
+
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.OktmoEntryListPrev[0].Octmo)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.OktmoEntryListPrev[0].Razdel)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.OktmoEntryListPrev[0].Name)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.OktmoEntryListPrevHidden)
+			{ //
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Octmo)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Razdel)
+					</td>
+					<td>
+                        <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+						<a asp-page="./Restore" asp-route-id="@item.Id">Восстановить</a>
+					</td>
+				</tr>
+			}
+			@foreach (var item in Model.OktmoEntryListNextHidden)
+			{ //
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Octmo)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Razdel)
+					</td>
+					<td>
+                        <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+						<a asp-page="./Restore" asp-route-id="@item.Id">Восстановить</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+}

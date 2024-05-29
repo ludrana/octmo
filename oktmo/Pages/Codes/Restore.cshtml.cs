@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using oktmo.Data;
 using oktmo.Models;
 
 namespace oktmo.Pages.Codes
 {
-    public class DeleteModel : PageModel
+    public class RestoreModel : PageModel
     {
         private readonly oktmo.Data.ApplicationDbContext _context;
 
-        public DeleteModel(oktmo.Data.ApplicationDbContext context)
+        public RestoreModel(oktmo.Data.ApplicationDbContext context)
         {
             _context = context;
         }
@@ -51,22 +46,22 @@ namespace oktmo.Pages.Codes
                 return Page();
             }
 
-            var oktmoEntryToDelete = await _context.OktmoEntry.FindAsync(OktmoEntry.Id);
+            var oktmoEntryToRestore = await _context.OktmoEntry.FindAsync(OktmoEntry.Id);
 
-            if (oktmoEntryToDelete == null)
+            if (oktmoEntryToRestore == null)
             {
                 return NotFound();
             }
 
-            oktmoEntryToDelete.IsActual = false; // Mark the entry as deleted
+            oktmoEntryToRestore.IsActual = true;
 
-            _context.OktmoEntry.Update(oktmoEntryToDelete);
+            _context.OktmoEntry.Update(oktmoEntryToRestore);
 
             OktmoEntryListNext = await _context.OktmoEntry.ToListAsync();
-            GetNextOktmoEntries(oktmoEntryToDelete);
+            GetNextOktmoEntries(oktmoEntryToRestore);
             foreach (var entry in OktmoEntryListNext)
             {
-                entry.IsActual = false; // Mark the entry as deleted
+                entry.IsActual = true; // Mark the entry as deleted
                 _context.OktmoEntry.Update(entry);
             }
 
@@ -115,9 +110,9 @@ namespace oktmo.Pages.Codes
                 }
                 if (res.IsNullOrEmpty())
                 {
-                    res.AddRange(OktmoEntryListNext.Where(e => e.Octmo.StartsWith(oktmoEntry.Octmo[..8]) & e.Razdel == "2").ToList());
+                res.AddRange(OktmoEntryListNext.Where(e => e.Octmo.StartsWith(oktmoEntry.Octmo[..8]) & e.Razdel == "2").ToList());
                 }
-
+                
                 OktmoEntryListNext = res;
             }
         }

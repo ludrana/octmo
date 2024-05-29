@@ -1,0 +1,94 @@
+﻿@page
+@model oktmo.Pages.Codes.SearchModel
+
+@{
+    ViewData["Title"] = "Результаты поиска";
+}
+<h1>Результаты поиска</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OktmoEntry[0].Octmo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OktmoEntry[0].Razdel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OktmoEntry[0].Name)
+            </th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OktmoEntry)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Octmo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Razdel)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div visible="false" id="h" class="w-100">
+        <p>Скрытые записи</p>
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OktmoEntryHidden[0].Octmo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OktmoEntryHidden[0].Razdel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OktmoEntryHidden[0].Name)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OktmoEntryHidden)
+                { //
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Octmo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Razdel)
+                        </td>
+                        <td>
+                            <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-page="./Restore" asp-route-id="@item.Id">Restore</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

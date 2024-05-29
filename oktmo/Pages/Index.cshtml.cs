@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using oktmo.Models;
 
 namespace oktmo.Pages
 {
@@ -12,9 +13,9 @@ namespace oktmo.Pages
 			_logger = logger;
 		}
 
-		public void OnGet()
+		public async Task<IActionResult> OnGetAsync()
 		{
-
-		}
-	}
+            return Redirect("/Codes");
+        }
+    }
 }
